@@ -1,4 +1,4 @@
 node_modules
 .env
-pasckage-lock.json
+package-lock.json
 tsconfig.json
