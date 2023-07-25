@@ -2,6 +2,14 @@ import * as admin from "firebase-admin"
 import { snapshotConstructor } from "firebase-functions/v1/firestore";
 import { Data } from "../../model/data.model"
 import { UserModel } from "../../model/userModel";
+import { serviceAccount } from "../../serviceAccount";
+import * as Busboy from 'busboy';
+import * as os from 'os';
+import * as path from 'path';
+import * as fs from 'fs';
+import { bucket } from "../../app";
+// import { bucket } from "firebase-functions/v1/storage";
+
 
 export const saveData = async(data: Data): Promise<string> => {
     const db = admin.database();
@@ -41,7 +49,6 @@ export const getAllUsers = async(): Promise<{ id: string; email: string }[]> => 
     try{
         const snapShot = await ref.once("value")
         const allUsers :  { id: string; email: string }[]  = []
-
         snapShot.forEach((childSnapShot) => {
             const user = childSnapShot.val() 
             if(user && user.email)
@@ -51,8 +58,85 @@ export const getAllUsers = async(): Promise<{ id: string; email: string }[]> => 
                
             })
         })
+        console.log(allUsers)
         return allUsers
     }catch(error){
         throw new Error("failed to retrieve users from database")
     }
 }
+
+// export const updateImage = async (email: string, imageUrl: string) => {
+//         const db = admin.firestore()
+//     try {
+//       // Find the data entry with the provided email in the database
+//       const dataEntryRef = db.collection('data').doc(email);
+//       const snapshot = await dataEntryRef.get();
+  
+//       // If the data entry exists, update the image URL
+//       if (snapshot.exists) {
+//         await dataEntryRef.update({ image: imageUrl });
+//         return imageUrl;
+//       } else {
+//         throw new Error('Data entry not found');
+//       }
+//     } catch (error) {
+//       throw new Error('Failed to update image in database');
+//     }
+//   };
+
+
+// Function to upload an image to Firebase Storage
+export const uploadImageToStorage = async (email: string, file: any) => {
+    try {
+      const imageFileName: any = Date.now() + '-' + file.originalname;
+      const fileUpload: any = bucket.file(imageFileName) as any;
+  
+      const blobStream = fileUpload.createWriteStream({
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+  
+      blobStream.on('error', (error: { message: string; }) => {
+        throw new Error('Error uploading image to storage: ' + error.message);
+      });
+  
+      blobStream.on('finish', () => {
+        const imageUrl = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
+        return imageUrl;
+      });
+  
+      blobStream.end(file.buffer);
+    } catch (error: any) {
+      throw new Error('Failed to upload image to storage: ' + error.message);
+    }
+  };
+  
+// ...
+
+export const updateImageUrlInFirestore = async (email: string, imageUrl: string): Promise<void> => {
+    try {
+      const userRef = admin.firestore().collection('users').where('email', '==', email);
+      const userSnapshot = await userRef.get();
+  
+      if (userSnapshot.empty) {
+        throw new Error('User not found with email: ' + email);
+      }
+  
+      const userDoc = userSnapshot.docs[0];
+      const userData = userDoc.data() as Data;
+  
+      await userDoc.ref.update({
+        image: imageUrl,
+      });
+      
+      // Return a resolved Promise to satisfy the Promise<void> return type
+      return Promise.resolve();
+    } catch (error: unknown) {
+      throw new Error('Failed to update image URL in Firestore: ' + (error as Error).message);
+    }
+  };
+  
+  // ...
+  
+  

@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyIdToken = exports.signup = void 0;
+exports.signup = void 0;
 const admin = __importStar(require("firebase-admin"));
 const signup = (email, password, role) => __awaiter(void 0, void 0, void 0, function* () {
     const userCredentials = yield admin.auth().createUser({
@@ -42,13 +42,13 @@ const signup = (email, password, role) => __awaiter(void 0, void 0, void 0, func
     return userCredentials.uid;
 });
 exports.signup = signup;
-const verifyIdToken = (idToken) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const decodedToken = yield admin.auth().verifyIdToken(idToken);
-        return decodedToken.uid;
-    }
-    catch (error) {
-        throw new Error("invalid token");
-    }
-});
-exports.verifyIdToken = verifyIdToken;
+// export const signinService = async(email:string, password: string): Promise<string> => {
+//     try{
+//         // const userCredentials = await admin.auth().signIn(idToken)
+//         const userCredential = await admin.auth().signInWithEmailAndPassword(email, password);
+//         const uid = userCredential.user?.uid;
+//         // return decodedToken.uid
+//     }catch(error){
+//         throw new Error("invalid token")
+//     }
+// }

@@ -32,17 +32,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminSignup = exports.userSignin = exports.userSignUp = void 0;
+exports.adminSignup = exports.userSignUp = void 0;
 const admin = __importStar(require("firebase-admin"));
 const userModel_1 = require("../model/userModel");
 const auth_utils_1 = require("../utils/auth.utils");
-const userService_1 = require("../config/services/userService");
+// import { verifyIdToken } from "../config/services/userService"
 //========user auth ===========
 const userSignUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password } = req.body;
-        const role = "user";
+        const { email, password, role } = req.body;
+        // const role: "user" | "admin" = "user"
+        console.log("iy");
         const userId = yield (0, auth_utils_1.SignUpUtils)(email, password, role);
+        console.log("iy");
         const newUser = new userModel_1.User();
         newUser.id = userId;
         newUser.email = email;
@@ -67,24 +69,6 @@ const userSignUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.userSignUp = userSignUp;
-const userSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { idToken } = req.body;
-        const uid = yield (0, userService_1.verifyIdToken)(idToken);
-        res.status(201).send({
-            status: 201,
-            message: "signin sucessful",
-            user: uid
-        });
-    }
-    catch (error) {
-        res.status(400).send({
-            status: 400,
-            message: "failed to signin"
-        });
-    }
-});
-exports.userSignin = userSignin;
 //========== admin auth ==============
 const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

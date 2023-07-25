@@ -1,5 +1,5 @@
 import { IsEmail, Length, Matches } from "class-validator";
-import { Admin } from "typeorm";
+
 export class User implements UserModel {
     id?: string;
 

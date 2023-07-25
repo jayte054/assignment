@@ -12,7 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpUtils = void 0;
 const userService_1 = require("../config/services/userService");
 const SignUpUtils = (email, password, role) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = yield (0, userService_1.signup)(email, password, role);
-    return userId;
+    console.log(email);
+    try {
+        const userId = yield (0, userService_1.signup)(email, password, role);
+        return userId;
+    }
+    catch (error) {
+        console.log(error);
+        throw error.message;
+    }
 });
 exports.SignUpUtils = SignUpUtils;

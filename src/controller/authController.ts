@@ -3,16 +3,17 @@ import bcrypt from "bcrypt"
 import { SignupInterface } from "../inteface/signupInterface"
 import { User } from "../model/userModel"
 import { SignUpUtils } from "../utils/auth.utils"
-import { verifyIdToken } from "../config/services/userService"
+// import { verifyIdToken } from "../config/services/userService"
 
 //========user auth ===========
 
 export const userSignUp = async(req:Request | any, res: Response | any) => {
     try{
-        const { email, password } : SignupInterface | any = req.body
-        const role: "user" | "admin" = "user"
-        
+        const { email, password, role } : SignupInterface | any = req.body
+        // const role: "user" | "admin" = "user"
+        console.log("iy")
         const userId = await SignUpUtils(email, password, role)
+    console.log("iy")
 
         const newUser = new User()
 
@@ -41,22 +42,7 @@ export const userSignUp = async(req:Request | any, res: Response | any) => {
     }
 }
 
-export const userSignin = async (req: Request | any, res: Response | any) => {
-    try{
-        const {idToken} = req.body
-        const uid = await verifyIdToken(idToken)
-        res.status(201).send({
-            status: 201,
-            message: "signin sucessful",
-            user: uid
-        })
-    }catch(error){
-        res.status(400).send({
-            status: 400,
-            message: "failed to signin"
-        })
-    }
-}
+
 
 //========== admin auth ==============
 

@@ -5,5 +5,6 @@ export interface Data {
     number_of_users: number;
     number_of_products: number;
     percentage?: number;
-    image?: string;
+    image?: File;
+    userId: string;
 }

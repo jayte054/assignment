@@ -10,11 +10,13 @@ export const signup = async(email: string, password: string, role: "user" | "adm
     return userCredentials.uid
 }
 
-export const verifyIdToken = async(idToken: string): Promise<string> => {
-    try{
-        const decodedToken = await admin.auth().verifyIdToken(idToken)
-        return decodedToken.uid
-    }catch(error){
-        throw new Error("invalid token")
-    }
-}
+// export const signinService = async(email:string, password: string): Promise<string> => {
+//     try{
+//         // const userCredentials = await admin.auth().signIn(idToken)
+//         const userCredential = await admin.auth().signInWithEmailAndPassword(email, password);
+//         const uid = userCredential.user?.uid;
+//         // return decodedToken.uid
+//     }catch(error){
+//         throw new Error("invalid token")
+//     }
+// }

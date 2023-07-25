@@ -32,8 +32,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllUsers = exports.getData = exports.saveData = void 0;
+exports.updateImageUrlInFirestore = exports.uploadImageToStorage = exports.getAllUsers = exports.getData = exports.saveData = void 0;
 const admin = __importStar(require("firebase-admin"));
+const app_1 = require("../../app");
+// import { bucket } from "firebase-functions/v1/storage";
 const saveData = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const db = admin.database();
     const ref = db.ref("data");
@@ -77,6 +79,7 @@ const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
                     email: user.email,
                 });
         });
+        console.log(allUsers);
         return allUsers;
     }
     catch (error) {
@@ -84,3 +87,66 @@ const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getAllUsers = getAllUsers;
+// export const updateImage = async (email: string, imageUrl: string) => {
+//         const db = admin.firestore()
+//     try {
+//       // Find the data entry with the provided email in the database
+//       const dataEntryRef = db.collection('data').doc(email);
+//       const snapshot = await dataEntryRef.get();
+//       // If the data entry exists, update the image URL
+//       if (snapshot.exists) {
+//         await dataEntryRef.update({ image: imageUrl });
+//         return imageUrl;
+//       } else {
+//         throw new Error('Data entry not found');
+//       }
+//     } catch (error) {
+//       throw new Error('Failed to update image in database');
+//     }
+//   };
+// Function to upload an image to Firebase Storage
+const uploadImageToStorage = (email, file) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const imageFileName = Date.now() + '-' + file.originalname;
+        const fileUpload = app_1.bucket.file(imageFileName);
+        const blobStream = fileUpload.createWriteStream({
+            metadata: {
+                contentType: file.mimetype,
+            },
+        });
+        blobStream.on('error', (error) => {
+            throw new Error('Error uploading image to storage: ' + error.message);
+        });
+        blobStream.on('finish', () => {
+            const imageUrl = `https://storage.googleapis.com/${app_1.bucket.name}/${fileUpload.name}`;
+            return imageUrl;
+        });
+        blobStream.end(file.buffer);
+    }
+    catch (error) {
+        throw new Error('Failed to upload image to storage: ' + error.message);
+    }
+});
+exports.uploadImageToStorage = uploadImageToStorage;
+// ...
+const updateImageUrlInFirestore = (email, imageUrl) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userRef = admin.firestore().collection('users').where('email', '==', email);
+        const userSnapshot = yield userRef.get();
+        if (userSnapshot.empty) {
+            throw new Error('User not found with email: ' + email);
+        }
+        const userDoc = userSnapshot.docs[0];
+        const userData = userDoc.data();
+        yield userDoc.ref.update({
+            image: imageUrl,
+        });
+        // Return a resolved Promise to satisfy the Promise<void> return type
+        return Promise.resolve();
+    }
+    catch (error) {
+        throw new Error('Failed to update image URL in Firestore: ' + error.message);
+    }
+});
+exports.updateImageUrlInFirestore = updateImageUrlInFirestore;
+// ...
