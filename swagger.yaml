@@ -1,0 +1,145 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Assignment API
+  description: This is a sample assignment API
+  license:
+    name: Justin Ewelike
+    url: localhost:3003
+host: localhost:3003
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /get:
+    get:
+      summary: List all entries
+      description: Retrieve a list of all entries
+      responses:
+        200:
+          description: A list of entries
+          schema:
+            type: array
+            items:
+              $ref: '#/definition/data'
+  /create:            
+    post:
+      summary: Create a new entry
+      description: Create a new data set
+      parameters:
+        - in: body
+          name: pet
+          description: create a set data
+          schema:
+            $ref: '#/definitions/NewData'
+      responses:
+        201:
+          description: The created data set
+          schema:
+            $ref: '#/definitions/data'
+  
+  /getusers:
+    get:
+      summary: Get all users 
+      description: Retrieve all users from the database
+      parameters:
+        - in: path
+          name: petId
+          type: integer
+          format: int64
+          description: get all users
+      responses:
+        200:
+          description: all users in the database
+          schema:
+            $ref: '#/definitions/users'
+  /auth/signup:
+    post:
+      summary: user signup 
+      description: register on the web app
+      parameters:
+        - in: path
+          name: petId
+          type: integer
+          format: int64
+          description: user signup
+      responses:
+        200:
+          description: signup to the database
+          schema:
+            $ref: '#/definitions/usersignup'
+  /auth/signin:
+    post:
+      summary: user signin 
+      description: user signin to app
+      parameters:
+        - in: path
+          name: petId
+          type: integer
+          format: int64
+          description: user signin as a user
+      responses:
+        200:
+          description: signin to the database
+          schema:
+            $ref: '#/definitions/usersignin'
+  /auth/admin/signin:
+    post:
+      summary: admin signin 
+      description: admin signin to app
+      parameters:
+        - in: path
+          name: petId
+          type: integer
+          format: int64
+          description: admin signin
+      responses:
+        200:
+          description: admin signin to the database
+          schema:
+            $ref: '#/definitions/adminsignin'
+  /uploadimage:          
+     post:
+      summary: upload image
+      description: update user with an image from the admin
+      parameters:
+        - in: path
+          name: petId
+          type: integer
+          format: int64
+          description: image upload
+      responses:
+        200:
+          description: upload image to the user entity in the database
+          schema:
+            $ref: '#/definitions/uploadimage'
+definitions:
+  Pet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: The ID of the pet
+      name:
+        type: string
+        description: The name of the pet
+      breed:
+        type: string
+        description: The breed of the pet
+  NewPet:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The name of the pet
+      breed:
+        type: string
+        description: The breed of the pet
+    required:
+      - name

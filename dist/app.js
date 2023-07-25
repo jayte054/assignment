@@ -35,6 +35,9 @@ const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const serviceAccount_1 = require("./serviceAccount");
 const userAuth_1 = require("./route/authRoute/userAuth");
 const dataController = __importStar(require("./controller/dataController"));
+// import { swaggerJSDocs, swaggerSpec } from "./utils/swaggerutils";
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swagger_1 = require("./swagger");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
@@ -52,11 +55,14 @@ const upload = (0, multer_1.default)({
         fileSize: 5 * 1024 * 1024, // 5MB file size limit
     },
 });
-app.use(dataRoute_1.routes);
+app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.swaggerDocument));
+//   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+//   swaggerJSDocs(app) 
+app.use(("/"), dataRoute_1.routes);
 app.use(("/auth"), userAuth_1.userRoute);
 app.use(("/auth"), userAuth_1.adminRoute);
 app.post("/uploadimage", upload.single("image"), dataController.handleImageUpload);
-const port = 3003;
+const port = 3005;
 app.listen(port, () => {
     console.log(`server is listening on port ${port}`);
 });
