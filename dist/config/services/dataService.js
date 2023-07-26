@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateImageUrlInFirestore = exports.uploadImageToStorage = exports.getAllUsers = exports.getData = exports.saveData = void 0;
+exports.updateImageUrlInFirestore = exports.uploadImageToStorage = exports.getEntriesByUserId = exports.getAllUsers = exports.getData = exports.saveData = void 0;
 const admin = __importStar(require("firebase-admin"));
 const app_1 = require("../../app");
 // import { bucket } from "firebase-functions/v1/storage";
@@ -87,6 +87,26 @@ const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getAllUsers = getAllUsers;
+const getEntriesByUserId = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const db = admin.firestore();
+        const entriesRef = db.collection('entries'); // Replace 'entries' with your Firestore collection name
+        // Query the entries collection to get documents where 'userId' field matches the provided userId
+        const snapshot = yield entriesRef.where('userId', '==', userId).get();
+        // Extract and return the data from the snapshot
+        const entries = [];
+        snapshot.forEach((doc) => {
+            const entryData = doc.data();
+            entries.push(entryData);
+        });
+        return entries;
+    }
+    catch (error) {
+        console.error('Error getting entries:', error);
+        throw new Error('Failed to fetch entries');
+    }
+});
+exports.getEntriesByUserId = getEntriesByUserId;
 // export const updateImage = async (email: string, imageUrl: string) => {
 //         const db = admin.firestore()
 //     try {

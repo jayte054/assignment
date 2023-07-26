@@ -101,6 +101,21 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getUser = getUser;
+// const getEntryByUserId = async (req: Request, res: Response) => {
+//     try{
+//         const entries = await getEntriesByUserId(userId)
+//         res.status(201).send({
+//             status: 210,
+//             message: "entries fetched successfully",
+//             entries: entries
+//         })
+//     }catch(error) {
+//         res.status(404).send({
+//             status: 404,
+//             message: "unable to fetch entries from database"
+//         })
+//     }
+// }
 //======admin upload image =========
 // Controller function to handle image upload and update
 const handleImageUpload = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

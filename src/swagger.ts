@@ -44,7 +44,7 @@ export const swaggerDocument = YAML.load("/Users/mac/Desktop/Assignment/swagger.
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
-const port = process.env.PORT || 3005
-app.listen(port, (() => {
-    console.log(`app is listening on port   ${port}`)
-}))
+// const port = process.env.PORT || 3005
+// app.listen(port, (() => {
+//     console.log(`app is listening on port   ${port}`)
+// }))

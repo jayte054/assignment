@@ -65,6 +65,28 @@ export const getAllUsers = async(): Promise<{ id: string; email: string }[]> => 
     }
 }
 
+export const getEntriesByUserId = async (userId: string) => {
+    try {
+      const db = admin.firestore();
+      const entriesRef = db.collection('entries'); // Replace 'entries' with your Firestore collection name
+  
+      // Query the entries collection to get documents where 'userId' field matches the provided userId
+      const snapshot = await entriesRef.where('userId', '==', userId).get();
+  
+      // Extract and return the data from the snapshot
+      const entries: admin.firestore.DocumentData[] = [];
+      snapshot.forEach((doc) => {
+        const entryData = doc.data();
+        entries.push(entryData);
+      });
+  
+      return entries;
+    } catch (error) {
+      console.error('Error getting entries:', error);
+      throw new Error('Failed to fetch entries');
+    }
+  };
+
 // export const updateImage = async (email: string, imageUrl: string) => {
 //         const db = admin.firestore()
 //     try {

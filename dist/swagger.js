@@ -42,7 +42,7 @@ const yamljs_1 = __importDefault(require("yamljs"));
 const app = (0, express_1.default)();
 exports.swaggerDocument = yamljs_1.default.load("/Users/mac/Desktop/Assignment/swagger.yaml");
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(exports.swaggerDocument));
-const port = process.env.PORT || 3005;
-app.listen(port, (() => {
-    console.log(`app is listening on port   ${port}`);
-}));
+// const port = process.env.PORT || 3005
+// app.listen(port, (() => {
+//     console.log(`app is listening on port   ${port}`)
+// }))

@@ -62,7 +62,7 @@ app.use(("/"), dataRoute_1.routes);
 app.use(("/auth"), userAuth_1.userRoute);
 app.use(("/auth"), userAuth_1.adminRoute);
 app.post("/uploadimage", upload.single("image"), dataController.handleImageUpload);
-const port = 3005;
+const port = 3003;
 app.listen(port, () => {
     console.log(`server is listening on port ${port}`);
 });

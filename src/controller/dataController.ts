@@ -1,5 +1,5 @@
 import express, { Request, Response} from "express"
-import { getAllUsers, getData, saveData,  } from "../config/services/dataService"
+import { getAllUsers, getData, getEntriesByUserId, saveData,  } from "../config/services/dataService"
 import { Data } from "../model/data.model"
 import {v4 as uuid} from "uuid"
 import * as dataServices from "../config/services/dataService"
@@ -71,6 +71,22 @@ export const getUser = async(req: Request, res: Response) => {
     }
 }
 
+
+// const getEntryByUserId = async (req: Request, res: Response) => {
+//     try{
+//         const entries = await getEntriesByUserId(userId)
+//         res.status(201).send({
+//             status: 210,
+//             message: "entries fetched successfully",
+//             entries: entries
+//         })
+//     }catch(error) {
+//         res.status(404).send({
+//             status: 404,
+//             message: "unable to fetch entries from database"
+//         })
+//     }
+// }
 //======admin upload image =========
 
 // Controller function to handle image upload and update
